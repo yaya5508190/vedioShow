@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:flow="http://www.springframework.org/schema/webflow-config" xmlns:jms="http://www.springframework.org/schema/jms"
+  xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang"
+  xmlns:osgi="http://www.springframework.org/schema/osgi" xmlns:tx="http://www.springframework.org/schema/tx"
+  xmlns:util="http://www.springframework.org/schema/util" xmlns:p="http://www.springframework.org/schema/p" xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xmlns:cache="http://www.springframework.org/schema/cache"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd
+       http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+       http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+       http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+  <context:property-placeholder location="classpath:application.properties" ignore-unresolvable="true" />
+  <context:component-scan base-package="web" />
+  <!-- MVC 设置 -->
+  <mvc:annotation-driven enable-matrix-variables="true" />
+  <mvc:default-servlet-handler />
+  <!-- <mvc:redirect-view-controller redirect-url="/index.html" path="/" /> -->
+
+  <!-- MVC 请求操作设置 -->
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <property name="messageConverters">
+      <list>
+        <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+          <property name="supportedMediaTypes">
+            <list>
+              <value>text/plain;charset=utf-8</value>
+              <value>text/html;charset=utf-8</value>
+              <value>text/json;charset=utf-8</value>
+              <value>application/json;charset=utf-8</value>
+            </list>
+          </property>
+        </bean>
+      </list>
+    </property>
+    <property name="customArgumentResolvers">
+      <list>
+      </list>
+    </property>
+  </bean>
+  <!-- 视图设置 -->
+  <bean id="viewResolverCommon" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="viewClass" value="org.springframework.web.servlet.view.InternalResourceView" />
+    <property name="prefix" value="/WEB-INF/views/jsp/" />
+    <property name="suffix" value=".jsp" />
+    <property name="order" value="1" />
+  </bean>
+  <bean id="viewResolverFtl" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+    <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+    <property name="contentType" value="text/html; charset=utf-8" />
+    <property name="cache" value="true" />
+    <property name="suffix" value=".ftl" />
+    <property name="order" value="0" />
+    <property name="exposeSpringMacroHelpers" value="true" />
+    <property name="exposeRequestAttributes" value="false" />
+    <property name="exposeSessionAttributes" value="false" />
+    <property name="requestContextAttribute" value="request" />
+  </bean>
+  <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
+  <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <property name="templateLoaderPaths">
+      <value>/WEB-INF/views/ftl/</value>
+    </property>
+    <property name="freemarkerVariables">
+      <map>
+        <entry key="xml_escape" value-ref="fmXmlEscape" />
+      </map>
+    </property>
+    <property name="defaultEncoding">
+      <value>UTF-8</value>
+    </property>
+    <property name="freemarkerSettings">
+      <props>
+        <prop key="tag_syntax">auto_detect</prop>
+        <prop key="template_update_delay">0</prop>
+        <prop key="default_encoding">UTF-8</prop>
+        <prop key="output_encoding">UTF-8</prop>
+        <prop key="locale">zh_CN</prop>
+        <prop key="date_format">yyyy-MM-dd</prop>
+        <prop key="time_format">HH:mm:ss</prop>
+        <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+      </props>
+    </property>
+  </bean>
+  <!-- 设置上传文件 -->
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+    p:defaultEncoding="utf-8">
+    <!-- 设置上传文件大小最大为 10M -->
+    <property name="maxUploadSize" value="0xA00000" />
+  </bean>
+
+</beans>

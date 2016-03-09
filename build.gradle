@@ -1,0 +1,79 @@
+group 'yx'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // Advanced gradle plugin for running web-apps on jetty and tomcat.
+        classpath 'org.akhikhl.gretty:gretty:1.2.4'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: "org.akhikhl.gretty"
+apply plugin: 'war'
+
+configurations {
+    all*.exclude group: "org.terracotta"
+    all*.exclude group: "log4j", module: "log4j"
+    all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
+    all*.exclude group: "commons-logging", module: "commons-logging"
+    all*.exclude group: "org.sonatype.sisu.inject", module: "cglib"
+    all*.exclude group: "org.opensymphony.quartz", module: "quartz"
+}
+
+dependencies {
+    compile "javax.inject:javax.inject:$javaxInject",
+            "javax.annotation:javax.annotation-api:$annotationsApi",
+            "cglib:cglib:$cglib",
+            "com.google.guava:guava:$guava",
+            "org.apache.poi:poi:$poi",
+            "org.apache.shiro:shiro-core:$shiro",
+            "org.apache.shiro:shiro-web:$shiro",
+            "org.apache.shiro:shiro-aspectj:$shiro",
+            "org.apache.shiro:shiro-cas:$shiro",
+            "org.apache.shiro:shiro-ehcache:$shiro",
+            "org.apache.shiro:shiro-features:$shiro",
+            "org.apache.shiro:shiro-guice:$shiro",
+            "org.apache.shiro:shiro-quartz:$shiro",
+            "org.apache.shiro:shiro-spring:$shiro",
+            "org.springframework:spring-aop:$spring",
+            "org.springframework:spring-aspects:$spring",
+            "org.springframework:spring-core:$spring",
+            "org.springframework:spring-beans:$spring",
+            "org.springframework:spring-context:$spring",
+            "org.springframework:spring-context-support:$spring",
+            "org.springframework:spring-jdbc:$spring",
+            "org.springframework:spring-tx:$spring",
+            "org.springframework:spring-web:$spring",
+            "org.springframework:spring-webmvc:$spring",
+            "org.freemarker:freemarker:$freemarker",
+            "joda-time:joda-time:$jodaTime",
+            "org.mybatis:mybatis:$mybatis",
+            "org.mybatis:mybatis-spring:$mybatisSpring",
+            "mysql:mysql-connector-java:$mysql",
+            "com.alibaba:druid:$druid",
+            "jstl:jstl:$jstlib",
+            "taglibs:standard:$standard",
+            "org.slf4j:slf4j-api:$slf4j",
+            "org.slf4j:jul-to-slf4j:$slf4j",
+            "org.slf4j:jcl-over-slf4j:$slf4j",
+            "ch.qos.logback:logback-classic:$logback",
+            "org.logback-extensions:logback-ext-spring:0.1.4",
+            "org.apache.commons:commons-lang3:$commonLang",
+            "commons-io:commons-io:$commonIO",
+            "commons-fileupload:commons-fileupload:$commonFileupload",
+            "com.fasterxml.jackson.core:jackson-core:$jackson2",
+            "com.fasterxml.jackson.core:jackson-databind:$jackson2",
+            "org.apache.httpcomponents:httpclient:$httpclient",
+            "org.apache.httpcomponents:fluent-hc:$httpclient"
+    providedCompile 'javax.servlet:servlet-api:2.5'
+    runtime 'javax.servlet:jstl:1.1.2'
+}
